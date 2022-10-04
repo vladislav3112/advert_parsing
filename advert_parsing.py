@@ -1,16 +1,5 @@
 import json
 
-"""Класс Advert для парсинга объявлений в формате JSON:
-    1. динамичесĸи создает атрибуты эĸземпляра ĸласса из атрибутов JSON-объеĸта
-    2. имеет свойство price и 
-        ○ проверяет, что устанавливаемое значение не отрицательно
-        ○ в случае отсутствия поля price в JSON-объеĸте возвращает 0
-    3. метод __repr__, ĸоторый выводит название и цену объявления
-    
-    Класс ColorizeMixin:
-        ○ меняет цвет теĸста при выводе на ĸонсоль
-        ○ задает цвет в атрибуте ĸласса repr_color_code"""
-
 
 def json_to_dict(json_filename):
     with open(json_filename, encoding="utf-8") as json_file:
@@ -18,6 +7,11 @@ def json_to_dict(json_filename):
 
 
 class ColorizeMixin:
+    """
+    ○ меняет цвет теĸста при выводе на ĸонсоль
+    ○ задает цвет в атрибуте ĸласса repr_color_code
+    """
+
     # список цветов
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
@@ -25,7 +19,7 @@ class ColorizeMixin:
     OKGREEN = "\033[92m"
     WARNING = "\033[93m"
     FAIL = "\033[91m"
-    ENDC = "\033[0m"  # вернуть цвет
+    ENDC = "\033[0m"  # вернуть цвет на стандартный
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
 
@@ -34,6 +28,14 @@ class ColorizeMixin:
 
 
 class Advert(ColorizeMixin):
+    """Класс Advert для парсинга объявлений в формате JSON:
+    1. динамичесĸи создает атрибуты эĸземпляра ĸласса из атрибутов JSON-объеĸта
+    2. имеет свойство price и
+        ○ проверяет, что устанавливаемое значение не отрицательно
+        ○ в случае отсутствия поля price в JSON-объеĸте возвращает 0
+    3. метод __repr__, ĸоторый выводит название и цену объявления
+    """
+
     def __repr__(self):
         return f"{ColorizeMixin.repr_color_code} {self.title} | {self.price} ₽ {ColorizeMixin.ENDC}"
 
