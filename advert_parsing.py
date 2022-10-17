@@ -26,6 +26,9 @@ class ColorizeMixin:
     # текущий цвет
     repr_color_code = WARNING
 
+    def __repr__(self):
+        return f"{ColorizeMixin.repr_color_code} {self.title} | {self.price} ₽ {ColorizeMixin.ENDC}"
+
 
 class Advert(ColorizeMixin):
     """Класс Advert для парсинга объявлений в формате JSON:
@@ -36,8 +39,16 @@ class Advert(ColorizeMixin):
     3. метод __repr__, ĸоторый выводит название и цену объявления
     """
 
+    def __setattr__(self, __name: str, __value) -> None:
+        if __name == "price" and __value < 0:
+            raise ValueError("Price must be >= 0")
+        return super().__setattr__(__name, __value)
+
     def __repr__(self):
-        return f"{ColorizeMixin.repr_color_code} {self.title} | {self.price} ₽ {ColorizeMixin.ENDC}"
+        if not super():
+            return f" {self.title} | {self.price} ₽"
+        else:
+            return super().__repr__()
 
     def __init__(self, mapping):
         for atribute in mapping:
@@ -47,10 +58,7 @@ class Advert(ColorizeMixin):
                 setattr(self, curr_atribute, Advert(curr_dict))
             else:
                 setattr(self, curr_atribute, mapping[curr_atribute])
-        if hasattr(self, "price"):
-            if self.price < 0:
-                raise ValueError("Price must be >= 0")
-        else:
+        if not hasattr(self, "price"):
             self.price = 0
 
 
@@ -67,7 +75,8 @@ if __name__ == "__main__":
     corgi_ad = Advert(dictionary_corgi)
     print(corgi_ad)
     corgi_ad.__class__
-
+    print(getattr(corgi_ad, "class"))
     # price < 0
     dictionary_fail = json_to_dict("price_test_ad.json")
-    fail_ad = Advert(dictionary_fail)
+    lesson_ad.price = -2  # ValueError
+    # fail_ad = Advert(dictionary_fail) #ValueError
